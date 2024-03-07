@@ -1,4 +1,9 @@
 import html from './app.html?raw';
+import todoStore from '../store/todo.store';
+
+const ElementIDs = {
+    todoList: '.todo-list',
+};
 
 
 /**
@@ -7,6 +12,11 @@ import html from './app.html?raw';
  */
 
 export const App = (elementId) => {
+
+    const displayTodos = () => {
+        const todos = todoStore.getTodos(todoStore.getCurrentFilter());
+        renderTodos(ElementIDs.todoList.todos);
+    }
 
 
     (() => {
