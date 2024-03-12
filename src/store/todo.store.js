@@ -1,7 +1,7 @@
 import { Todo } from '../todos/models/todo.model';
 
 
-const Filters = {
+export const Filters = {
     All: 'All',
     Completed: 'Completed',
     Pending: 'Pending'
@@ -9,26 +9,30 @@ const Filters = {
 
 const state = {
     todos: [
-        new Todo('Piedra del alma'),
-        new Todo('Piedra del infinito'),
-        new Todo('Piedra del tiempo'),
-        new Todo('Piedra del poder'),
-        new Todo('Piedra de la realidad')
+        
     ],
     filter: Filters.All,
 
 }
 
 const initStore = () => {
-    console.log(state);
+    loadstore();
     console.log('InitStore ');
 }
 
 const loadstore = () => {
-    throw new Error('Not implemented')
+    if(!localStorage.getItem('state')) return;
+    const {todos = [], filter = Filters.All} = JSON.parse(localStorage.getItem('state'));
+
+    state.todos = todos;
+    state.filter = filter;
 }
 
-const getTodos = ( filter = Filter.Al ) => {
+const saveStateToLocalStorage = () => {
+    localStorage.setItem('state', JSON.stringify(state));
+};
+
+const getTodos = ( filter = Filters.All ) => {
     switch(filter){
         case Filters.All:
             return[...state.todos];
@@ -44,6 +48,7 @@ const getTodos = ( filter = Filter.Al ) => {
 const addTodo = (description) => {
     if(!description) throw new Error(`Description is required`);
     state.todos.push(new Todo(description));
+    saveStateToLocalStorage();
 }
 
 const toggleTodo = (todoId) => {
@@ -53,18 +58,22 @@ const toggleTodo = (todoId) => {
         }
         return todo;
     });
+    saveStateToLocalStorage();
 };
 
 const deleteTodo = (todoId) => {
     state.todos = state.todos.filter (todo => todo.id !== todoId)
+    saveStateToLocalStorage();
 };
 
 const deleteCompleted = () => {
-    state.todos = state.todos.filter( todo => todo.done );
+    state.todos = state.todos.filter( todo => !todo.done );
+    saveStateToLocalStorage();
 };
 
 const setFilter = ( newFilter = Filters.All ) => {
     state.filter = newFilter;
+    saveStateToLocalStorage();
 };
 
 const getCurrentFilter = () => {
