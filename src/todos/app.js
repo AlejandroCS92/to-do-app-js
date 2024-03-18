@@ -1,5 +1,5 @@
 import html from './app.html?raw';
-import todoStore from '../store/todo.store';
+import todoStore, {Filters} from '../store/todo.store';
 import { renderTodos, renderPending } from './use-cases';
 
 const ElementIDs = {
